@@ -1,0 +1,19 @@
+# 本机数据与摘录，交接说明约定不外传
+specialty/gongwen/cases/
+公务员工作流-交接.md
+
+# 内网收文模块：代码与测试引用 OA 内网 IP、SSL VPN 地址
+specialty/shouwen/
+.dsh/skills/shouwen/
+
+# 工作台留痕：含真实收文清单和工作记录
+specialty/work/sessions/
+
+# 系统与临时文件
+__pycache__/
+*.pyc
+~$*
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/

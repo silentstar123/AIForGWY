@@ -1,0 +1,36 @@
+公务员办公版 · 使用说明
+========================
+
+一、这是什么
+  DeepSeek Harness 的一个工作区副本，只保留公务员办公需要的能力：
+  收文、公文起草与审核、转发通知、材料/会议纪要、桌面截图操作、工作留痕。
+  不含社交发布、多账号运营、桌宠、语音。
+
+二、怎么打开
+  1. 打开 DeepSeek Harness；
+  2. 把工作区切到 G:\dsh-gongwu（或选择这个文件夹）；
+  3. 直接说需求，例如：
+     - 查一下今天收了什么文件
+     - 把这份省文件转给各县区
+     - 写一份关于开展……的通知
+     - 帮我核一下这份稿子
+     - 把会议材料整理成纪要
+
+三、第一次用先自检
+  cd /d G:\dsh-gongwu
+  python specialty\deliver\doctor.py
+
+四、常用命令
+  python specialty\shouwen\shouwen.py status
+  python specialty\gongwen\forward.py --help
+  python specialty\work\work.py --help
+
+五、数据和留痕
+  specialty\work\sessions\  每件活的步骤、产出、报告
+  删除只进回收站；发送、报批前会停下来问。
+
+六、注意
+  - 文号、机关、日期、签批只用你给的内容；
+  - 法规和文件先核对再引用；
+  - 涉密材料不上传外网；
+  - 这个目录不含 DSH 源码，升级桌面版不影响它。

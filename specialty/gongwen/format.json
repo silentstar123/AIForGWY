@@ -1,0 +1,46 @@
+{
+  "profile": "langfang-fagaiwei",
+  "description": "从本机 Word 公文样本归纳的版式。样本见 samples 字段。build 时按此渲染，inspect 可对新样本再核对。",
+  "samples": [
+    "G:/办公/办公/20261027 创新平台转发通知/廊坊市转发企业技术中心管理办法的通知（代拟稿）.docx",
+    "G:/办公/办公/20261027 创新平台转发通知/廊坊市转发两类创新平台管理办法的通知（代拟稿）.docx",
+    "G:/办公/办公/20260911 未来产业转发/廊坊市发展和改革委员会.docx",
+    "G:/办公/过往工作类型文件整理/10_会议通知公文/第17期.docx"
+  ],
+  "page": {
+    "widthCm": 21.0,
+    "heightCm": 29.7,
+    "marginTopCm": 3.5,
+    "marginBottomCm": 3.5,
+    "marginLeftCm": 2.7,
+    "marginRightCm": 2.7,
+    "headerCm": 1.5,
+    "footerCm": 1.75
+  },
+  "fonts": {
+    "title": "方正小标宋简体",
+    "titleSizePt": 22,
+    "body": "仿宋_GB2312",
+    "bodySizePt": 16,
+    "heading1": "黑体",
+    "heading2": "楷体_GB2312",
+    "latin": "Times New Roman",
+    "pageNumber": "宋体",
+    "pageNumberSizePt": 14
+  },
+  "spacing": {
+    "lineSpacingPt": 28,
+    "firstLineIndentChars": 2,
+    "titleLineSpacingPt": 28
+  },
+  "letterhead": {
+    "color": "000000",
+    "note": "样本发文机关标志为黑色 22pt；正式红头可把 color 改成 FF0000。"
+  },
+  "notes": [
+    "样本页边距上 3.5、下 3.5、左 2.7、右 2.7 厘米；GB/T 9704 为 3.7/3.5/2.8/2.6，本机沿用样本。",
+    "发文机关标志与标题均为方正小标宋简体二号（22pt），正文仿宋_GB2312 三号（16pt）。",
+    "正文行距固定 28pt，首行缩进 2 字符（32pt）；函的样本行距为 29.2pt，可在 spec 中覆盖。",
+    "署名和成文日期右对齐；页码在页脚居中，形式为 — 1 —。"
+  ]
+}

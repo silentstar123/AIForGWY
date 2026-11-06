@@ -239,7 +239,7 @@ def add_right_tab(para, width_pt: float) -> None:
 def build(spec: dict[str, Any], profile: dict[str, Any], out_path: Path) -> Path:
     fonts = profile["fonts"]
     spacing = profile["spacing"]
-    page = profile["page"]
+    page = {**profile["page"], **(spec.get("page") or {})}
     line_pt = float(spec.get("lineSpacingPt") or spacing["lineSpacingPt"])
     body_chars = float(spec.get("firstLineIndentChars") or spacing["firstLineIndentChars"])
     body_size = fonts["bodySizePt"]
@@ -334,8 +334,14 @@ def build(spec: dict[str, Any], profile: dict[str, Any], out_path: Path) -> Path
              align=WD_ALIGN_PARAGRAPH.CENTER, color=(profile.get("letterhead") or {}).get("color"))
         empty()
 
-    title_lines = spec.get("titleLines") or wrap_title_lines(
-        spec["title"], int(spec.get("titleCharsPerLine") or 20))
+    # 标题默认整段一行，由 Word 自然换行（本人习惯，不手动断行）；
+    # 确需手排时在 spec 里给 titleLines 或 titleCharsPerLine
+    if spec.get("titleLines"):
+        title_lines = spec["titleLines"]
+    elif spec.get("titleCharsPerLine"):
+        title_lines = wrap_title_lines(spec["title"], int(spec["titleCharsPerLine"]))
+    else:
+        title_lines = [spec["title"]]
     for line in title_lines:
         text(line, ea=fonts["title"], size=fonts["titleSizePt"], align=WD_ALIGN_PARAGRAPH.CENTER)
     empty()

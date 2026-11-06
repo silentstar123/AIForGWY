@@ -1,6 +1,7 @@
 # 本机数据与摘录，交接说明约定不外传
 specialty/gongwen/cases/
 公务员工作流-交接.md
+specialty/ddl/tasks.json
 
 # 内网收文模块：代码与测试引用 OA 内网 IP、SSL VPN 地址
 specialty/shouwen/

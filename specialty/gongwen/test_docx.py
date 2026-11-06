@@ -257,7 +257,7 @@ class BuildExtrasTest(unittest.TestCase):
         self.assertGreaterEqual(len(lines), 2)
 
     def test_long_title_is_split_in_docx(self) -> None:
-        # 40 字以内的长标题断成两行；超长标题不硬拆，交回 Word 自然换行
+        # 默认标题整段一行自然换行；确需手排时给 titleLines
         medium = "关于转发省发改委《关于印发河北省企业技术中心管理办法的通知》的通知"
         doc = self.build_doc({
             "kind": "通知", "issuer": "某委", "documentNo": "〔2026〕1号",
@@ -267,21 +267,23 @@ class BuildExtrasTest(unittest.TestCase):
         title_paras = [p for p in doc.paragraphs
                        if p.runs and p.runs[0].font.size and p.runs[0].font.size.pt == 22
                        and p.text != "某委"]
-        self.assertGreaterEqual(len(title_paras), 2)
-        self.assertEqual("".join(p.text for p in title_paras), medium)
+        self.assertEqual(len(title_paras), 1)
+        self.assertEqual(title_paras[0].text, medium)
 
-    def test_super_long_title_stays_one_line(self) -> None:
+    def test_title_lines_override_splits(self) -> None:
         title = "关于转发省发改委《关于印发河北省新兴产业创新中心管理办法和产业技术工程化中心管理办法的通知》的通知"
         doc = self.build_doc({
             "kind": "通知", "issuer": "某委", "documentNo": "〔2026〕1号",
-            "title": title, "recipients": ["各单位"], "body": ["正文。"],
+            "title": title,
+            "titleLines": ["关于转发省发改委《关于印发河北省新兴产业创新中心", "管理办法和产业技术工程化中心管理办法的通知》的通知"],
+            "recipients": ["各单位"], "body": ["正文。"],
             "signers": ["某委"], "date": "2026年1月1日",
         })
         title_paras = [p for p in doc.paragraphs
                        if p.runs and p.runs[0].font.size and p.runs[0].font.size.pt == 22
                        and p.text != "某委"]
-        self.assertEqual(len(title_paras), 1)
-        self.assertEqual(title_paras[0].text, title)
+        self.assertGreaterEqual(len(title_paras), 2)
+        self.assertEqual("".join(p.text for p in title_paras), title)
 
     def test_approval_signer_shares_line_with_document_number(self) -> None:
         doc = self.build_doc({

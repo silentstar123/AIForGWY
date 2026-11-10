@@ -151,6 +151,28 @@ class BodyLayoutTest(unittest.TestCase):
         self.assertEqual(east_asia(h1.runs[0]), "黑体")
         self.assertEqual(east_asia(h2.runs[0]), "楷体_GB2312")
 
+    def test_body_dict_entry_uses_custom_font(self) -> None:
+        # 撤销请示的无编号节标题：{"text": ..., "font": "黑体"}
+        profile = gongwen_docx.load_profile()
+        spec = {
+            "kind": "请示", "issuer": "某委", "documentNo": "〔2026〕1号",
+            "title": "关于撤销某中心的请示", "recipients": ["省发改委"],
+            "body": [
+                "现将具体情况汇报如下：",
+                {"text": "某中心全称", "font": "黑体"},
+                "该中心于2024年批复建设。",
+            ],
+            "signers": ["某委"], "date": "2026年1月1日",
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "c.docx"
+            gongwen_docx.build(spec, profile, out)
+            doc = Document(str(out))
+        heading = [p for p in doc.paragraphs if p.text == "某中心全称"][0]
+        self.assertEqual(east_asia(heading.runs[0]), "黑体")
+        body = [p for p in doc.paragraphs if p.text == "该中心于2024年批复建设。"][0]
+        self.assertEqual(east_asia(body.runs[0]), "仿宋_GB2312")
+
     def test_meta_lines_render_for_minutes(self) -> None:
         profile = gongwen_docx.load_profile()
         spec = gongwen_docx.template("纪要")

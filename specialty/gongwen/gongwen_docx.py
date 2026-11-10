@@ -366,6 +366,15 @@ def build(spec: dict[str, Any], profile: dict[str, Any], out_path: Path) -> Path
             text(line + "：", indent=0)
 
     for para_text in spec.get("body") or []:
+        # body 条目可以是字符串，或 {"text": ..., "font": "黑体"} 指定中文字体
+        # （如撤销请示里无编号的节标题：黑体、首行缩进、无"一、"标号）
+        if isinstance(para_text, dict):
+            custom = str(para_text.get("text") or "")
+            if not custom.strip():
+                empty()
+                continue
+            text(custom, ea=para_text.get("font") or fonts["body"], indent=indent_pt)
+            continue
         if not str(para_text).strip():
             empty()
             continue

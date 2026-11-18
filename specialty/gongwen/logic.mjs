@@ -154,7 +154,7 @@ function requireAny(body, labels, issues, label) {
 }
 
 function commonNotes(kind, body, notes) {
-  if (/附件/.test(body) && !/附件[:：]\s*\S/.test(body)) {
+  if (/附\s*件/.test(body) && !/附\s*件[:：]\s*\S/.test(body)) {
     notes.push('写了「附件」，但没有「附件：」后面的名称')
   }
   if (kind === '请示') {
@@ -166,11 +166,21 @@ function commonNotes(kind, body, notes) {
 export function lint(kind, text) {
   const issues = []
   const notes = []
+  // 转发通知按通知校验，另加转发类专项规则（2026-11 用户定稿归纳）：
+  // 正文只写一段「XX下发了《…》，现将通知转发给你们，请……」，不分条；
+  // 附件只列被转发文件，写作「附    件：省发改委《关于开展…工作的通知》」。
+  const isForward = kind === '转发通知'
+  if (isForward) kind = '通知'
   if (!KINDS.includes(kind)) {
     return { ok: false, issues: [`文种必须是：${KINDS.join('、')}`], notes: [] }
   }
   const body = String(text || '').replace(/^\uFEFF/, '').trim()
   if (!body) return { ok: false, issues: ['草稿是空的'], notes: [] }
+  if (isForward) {
+    if (/^[一二三四五六七八九十]、/m.test(body)) issues.push('转发通知正文不要分「一、二、」，要求接在缘由后面写成一段')
+    if (!/转发给你们/.test(body)) notes.push('转发通知正文建议用「现将通知转发给你们，请……」句式')
+    if (/现将《[^》]+》（[^）]*号[^）]*）转发给你们/.test(body)) notes.push('正文里转发句不必重复文号括号，写「现将通知转发给你们」即可')
+  }
 
   if (OFFICE.includes(kind)) {
     if (kind === '总结') {

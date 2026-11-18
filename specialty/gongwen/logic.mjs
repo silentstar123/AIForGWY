@@ -147,6 +147,12 @@ function requireLabels(body, labels, issues) {
   }
 }
 
+function requireAny(body, labels, issues, label) {
+  if (!labels.some((item) => body.includes(item))) {
+    issues.push(`缺少「${label}」（${labels.join(' / ')}任一）`)
+  }
+}
+
 function commonNotes(kind, body, notes) {
   if (/附件/.test(body) && !/附件[:：]\s*\S/.test(body)) {
     notes.push('写了「附件」，但没有「附件：」后面的名称')
@@ -167,7 +173,15 @@ export function lint(kind, text) {
   if (!body) return { ok: false, issues: ['草稿是空的'], notes: [] }
 
   if (OFFICE.includes(kind)) {
-    requireLabels(body, OFFICE_LABELS[kind], issues)
+    if (kind === '总结') {
+      // 两类口径都算数：专项总结（督查整改类，逐条负责人/时限）和
+      // 年度/综合总结（「存在的不足」「明年谋划」措辞，无逐条责任分工）。
+      requireLabels(body, ['完成情况'], issues)
+      requireAny(body, ['问题', '不足'], issues, '问题或不足')
+      requireAny(body, ['下一步', '谋划', '打算'], issues, '下一步或谋划')
+    } else {
+      requireLabels(body, OFFICE_LABELS[kind], issues)
+    }
     if (kind === '讲话' && !/一、|1[.．]/.test(body)) issues.push('讲话提纲没有分点')
     if (kind === '简报' && /请批示|请批复/.test(body)) notes.push('简报里出现了请示结语')
     if (/待核实|待填|待办文系统填写/.test(body)) notes.push('稿中仍有待填或待核实标记，送审前要逐条消掉或留给用户')
